@@ -37,11 +37,15 @@ require_login();
 
 //the title of this page:it is using the language file to set this value. 
 $strpagetitle = get_string('staffmanager', 'local_staffmanager');
+$strpageheading = get_string('staffmanager', 'local_staffmanager');
 //this will use the strpagetitle to set the title inside the page, in moodle this is how the title is set inside the page. 
 $PAGE->set_title($strpagetitle);
+$PAGE->set_heading($strpageheading);
+
+
 
 //this is outputing the standard header from moodle
 echo $OUTPUT->header();
-
+echo $OUTPUT->render_from_template('local_staffmanager/searchbar', []);
 echo $OUTPUT->footer();
 
