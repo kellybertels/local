@@ -32,8 +32,16 @@ global $USER,$DB,$CFG;
 //using the variable $PAGE moodle knows what an url is and where it is 
 $PAGE->set_url('/local/staffmanager/index.php');
 $PAGE->set_context(context_system::instance());
+$PAGE->requires->js('/local/staffmanager/assets/staffmanager.js');
 
 require_login();
+$month = optional_param('month','',PARAM_TEXT);
+$year = optional_param('year','',PARAM_TEXT);
+
+$obj = new stdClass();
+$obj->month = (int)$month;
+$obj->year = (int)$year;
+
 
 //the title of this page:it is using the language file to set this value. 
 $strpagetitle = get_string('staffmanager', 'local_staffmanager');
@@ -46,6 +54,8 @@ $PAGE->set_heading($strpageheading);
 
 //this is outputing the standard header from moodle
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('local_staffmanager/searchbar', []);
+echo $OUTPUT->render_from_template('local_staffmanager/searchbar', $obj);
+echo $OUTPUT->render_from_template('local_staffmanager/searchresults', $obj);
+
 echo $OUTPUT->footer();
 
