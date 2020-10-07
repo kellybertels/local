@@ -45,6 +45,12 @@ if($mform->is_cancelled())
     //but to submit it will just if it has an id (if estatement bellow)
 if($id){
 //has id then update
+$obj = $DB->get_record('local_staffmanager_rates', ['id'=>$id]);
+$obj->month = $fromform->month;
+$obj->year = $fromform->year;
+$obj->assignmentrate = $fromform->assignmentrate;
+$obj->quizrate = $fromform->quizrate;
+$DB->update_record('local_staffmanager_rates', $obj);
 
     //if there is not id else
 }else{
