@@ -29,20 +29,9 @@ require_once '../../config.php';
 //Those are the global setting that we will use from the config file
 global $USER,$DB,$CFG;
 
-//using the variable $PAGE moodle knows what an url is and where it is 
-$PAGE->set_url('/local/staffmanager/index.php');
+$PAGE->set_url('../../config.php');
 $PAGE->set_context(context_system::instance());
-$PAGE->requires->js('/local/staffmanager/assets/staffmanager.js');
-
 require_login();
-$month = optional_param('month','',PARAM_TEXT);
-$year = optional_param('year','',PARAM_TEXT);
-
-$obj = new stdClass();
-$obj->month = (int)$month;
-$obj->year = (int)$year;
-$obj->monthname = date('F',strtotime($year."-".$month));
-
 
 //the title of this page:it is using the language file to set this value. 
 $strpagetitle = get_string('staffmanager', 'local_staffmanager');
@@ -51,34 +40,11 @@ $strpageheading = get_string('staffmanager', 'local_staffmanager');
 $PAGE->set_title($strpagetitle);
 $PAGE->set_heading($strpageheading);
 
-//DATABASE
-//use start and end in this manner isnt secure because of sql injections
+$rates=$DB->get_records('local_staffanager_rates', null,'year DESC month ASC');
+
 $results = new stdClass();
-$start = mktime(0,0,0,$obj->month,1,$obj->year);
-$end  = mktime(23,59,00,$obj->month+1,0,$obj->year);
+$results->data= array_values($rates);
 
-$sql = "SELECT DISTINCT(gg.usermodified) as graderid
-FROM {grade_grades} AS gg
-LEFT JOIN {user} AS grader ON grader.id = gg.usermodified
-WHERE gg.usermodified <> '' AND gg.finalgrade > 0 AND gg.timemodified >= ". $start." AND gg.timemodified <=".$end ;
-$graders = $DB->get_records_sql($sql);
-
-foreach($graders AS $key => $value)
-{
-// graders details
-
-$graders[$key] = $DB->get_record('user', ['id' => $graders[$key]->graderid],'firstname,lastname,id,email');
-
- // $user = $DB->get_record('user',[])
-}
-
-$results->data = array_values($graders);
-print_r($results);
-//this is outputing the standard header from moodle
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('local_staffmanager/searchbar', $obj);
-echo $OUTPUT->render_from_template('local_staffmanager/searchresults', $results);
-print_r($results);
-//var_dump($results);
+echo $OUTPUT->render_from_template('local_staffmanager/rates')
 echo $OUTPUT->footer();
-

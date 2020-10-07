@@ -14,7 +14,7 @@
 
 
 //$plugin->version  = yyyymmddxx; the xx is the version of my plug in (starting at 01 for first version and so on).
-$plugin->version = 2020100201;
+$plugin->version = 2020100202;
 //the plugin requires is the required version for this plugin to work, this number was got from the path: moodle > version.php when this plugin was created.
 $plugin->requires  = 2020081400.00;  
 //plugin type is local, and the name of plugin is staff manager, this name needs to match with your plugin name.
