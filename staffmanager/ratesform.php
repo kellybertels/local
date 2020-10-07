@@ -17,12 +17,14 @@
 
 require_once('../../config.php');
 global $USER, $DB, $CFG;
-
 $PAGE->set_url('/local/staffmanager/rates.php');
 $PAGE->set_context(context_system::instance());
-$PAGE->requires->js('/local/staffmanager/assets/staffmanager.js');
+
+$id= optional_param('id', '', PARAM_TEXT);
 
 require_login();
+
+require_once("forms/rates.php");
 
 $strpagetitle = get_string('staffmanager', 'local_staffmanager');
 $strpageheading = get_string('rates', 'local_staffmanager');
@@ -30,17 +32,23 @@ $strpageheading = get_string('rates', 'local_staffmanager');
 $PAGE->set_title($strpagetitle);
 $PAGE->set_heading($strpageheading);
 
-$rates = $DB->get_records('local_staffmanager_rates',null,'year DESC,month ASC');
-foreach ($rates as $key => $value)
+$mform =new rates_form();
+$toform = [];
+
+if($mform->is_cancelled())
 {
-  $rates[$key]->monthname = date("F", mktime(0, 0, 0, $rates[$key]->month, 10));
+    //handle form cancel operation
+    redirect("/local/staffmanager/rates.php",'',10);
+//if the form isnt cancel, and there is data to submit on it it goes to else if
+}elseif($fromform = $mform->get_data()){
+
+    //but to submit it will just if it has an id (if estatement bellow)
+if($id){
+//has id then update
+
+    //if there is not id else
+}else{
+//no id then add new record
 }
 
-$results = new stdClass();
-$results->data = array_values($rates);
-
-echo $OUTPUT->header();
-
-echo $OUTPUT->render_from_template('local_staffmanager/rates', $results);
-
-echo $OUTPUT->footer();
+}
