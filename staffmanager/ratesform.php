@@ -55,6 +55,12 @@ $DB->update_record('local_staffmanager_rates', $obj);
     //if there is not id else
 }else{
 //no id then add new record
+$obj = new stdClass();
+$obj->month = $fromform->month;
+$obj->year = $fromform->year;
+$obj->assignmentrate = $fromform->assignmentrate;
+$obj->quizrate = $fromform->quizrate;
+$orgid = $DB->insert_record('local_staffmanager_rates', $obj, true, false);
 }
 
 }
