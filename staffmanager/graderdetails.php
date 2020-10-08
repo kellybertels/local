@@ -42,9 +42,8 @@ $start = mktime(0,0,0,$month,1,$year);
 $end  = mktime(23,59,00,$month+1,0,$year);
 
 // get rates
-$rate = $DB->get_record('local_staffmanager_rates',['year'=>$year,'month'=>$month]);
+$rates = $DB->get_record('local_staffmanager_rates',['year'=>$year,'month'=>$month]);
 $grader = $DB->get_record('user', ['id' => $graderid],'firstname,lastname,id,email');
-
 // get grades marked by each grader
 $data = [];
 
@@ -64,11 +63,11 @@ foreach ($grades as $key => $value)
     $grades[$key]->value = 0;
     if($grades[$key]->modulename == 'assign')
     {
-      $grades[$key]->value = $rate->assignmentrate;
+      $grades[$key]->value = $rates->assignmentrate;
     }
     if($grades[$key]->modulename == 'quiz')
     {
-      $grades[$key]->value = $rate->quizrate;
+      $grades[$key]->value = $rates->quizrate;
     }
   $totalvalue  += $grades[$key]->value;
   $grades[$key]->datetimemodified = date('d-M-Y H:m',$grades[$key]->tmodified);
@@ -83,6 +82,6 @@ $results->year = $year;
 $results->totalvalue  = number_format($totalvalue, 2, '.', ' ');
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('local_staffmanager/graderdetail', $results);
+echo $OUTPUT->render_from_template('local_staffmanager/graderdetails', $results);
 
 echo $OUTPUT->footer();
