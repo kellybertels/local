@@ -62,5 +62,20 @@ $obj->assignmentrate = $fromform->assignmentrate;
 $obj->quizrate = $fromform->quizrate;
 $orgid = $DB->insert_record('local_staffmanager_rates', $obj, true, false);
 }
+ // redirect to units page with qual id
+ redirect("/local/staffmanager/rates.php?id=$id", 'Changes saved', 10,  \core\output\notification::NOTIFY_SUCCESS);
 
+} else {
+    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form.
+    if ($id) {
+        $toform = $DB->get_record('local_staffmanager_rates', ['id'=>$id]);
+    }
+    //Set default data (if any)
+    $mform->set_data($toform);
+
+    echo $OUTPUT->header();
+    $mform->display();
+
+    echo $OUTPUT->footer();
 }
