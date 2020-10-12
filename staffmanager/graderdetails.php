@@ -67,7 +67,7 @@ foreach ($grades as $key => $value)
     }
     if($grades[$key]->modulename == 'quiz')
     {
-      $grades[$key]->value = $rates->quizrate;
+      $graders[$key]->value = $rates->quizrate;
     }
   $totalvalue  += $grades[$key]->value;
   $grades[$key]->datetimemodified = date('d-M-Y H:m',$grades[$key]->tmodified);
@@ -82,6 +82,7 @@ $results->year = $year;
 $results->totalvalue  = number_format($totalvalue, 2, '.', ' ');
 
 echo $OUTPUT->header();
+phpinfo();
 echo $OUTPUT->render_from_template('local_staffmanager/graderdetails', $results);
 
 echo $OUTPUT->footer();
