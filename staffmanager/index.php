@@ -80,6 +80,7 @@ $results->year = $year;
 
 //this is outputing the standard header from moodle
 echo $OUTPUT->header();
+
 echo $OUTPUT->render_from_template('local_staffmanager/searchbar', $obj);
 echo $OUTPUT->render_from_template('local_staffmanager/searchresults', $results);
 print_r($results);
