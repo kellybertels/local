@@ -82,7 +82,7 @@ $results->year = $year;
 $results->totalvalue  = number_format($totalvalue, 2, '.', ' ');
 
 echo $OUTPUT->header();
-phpinfo();
+//phpinfo();
 echo $OUTPUT->render_from_template('local_staffmanager/graderdetails', $results);
 
 echo $OUTPUT->footer();

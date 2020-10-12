@@ -56,7 +56,7 @@ $PAGE->set_heading($strpageheading);
 $results = new stdClass();
 $start = mktime(0,0,0,$obj->month,1,$obj->year);
 $end  = mktime(23,59,00,$obj->month+1,0,$obj->year);
-
+$rate= $DB->get_record('local_staffmanager_rates',['year'=>$year,'month'=>$month]);
 $sql = "SELECT DISTINCT(gg.usermodified) as graderid
 FROM {grade_grades} AS gg
 LEFT JOIN {user} AS grader ON grader.id = gg.usermodified
@@ -66,13 +66,38 @@ $graders = $DB->get_records_sql($sql);
 foreach($graders AS $key => $value)
 {
 // graders details
-//$graders[$key] = $DB->get_record('user', ['id' => $graders[$key]->graderid],'firstname,lastname,id,email');
+$graders[$key] = $DB->get_record('user',['id'=>$graders[$key]->graderid],'firstname, lastname, id, email');
 
-$graders[$key] = $DB->get_record('user', ['id' => $graders[$key]->graderid],'firstname, lastname, id, email');
-  // graders details
- // $grader = $DB->get_record('user', ['id' => $grader->graderid],'firstname,lastname,id,email');
- // $user = $DB->get_record('user',[])
+ 
+//assignments graded
+$sql = "SELECT gg.id as gradeid, gi.itemmodule AS modulename, gg.timemodified AS tmodified 
+FROM {grade_grades} AS gg
+JOIN {grade_items} AS gi ON gi.id = gg.itemid
+WHERE gg.usermodified =". $graders[$key]->id." AND gg.finalgrade > 0 AND gg.timemodified >= ". $start." AND gg.timemodified <=" .$end ;
+
+$grades = $DB->get_records_sql($sql);
+
+$grader[$key]->totalvalue = 0;
+
+
+foreach($grades as $gradekey =>$gradevalue)
+{
+  $grades[$gradekey]->value = 0;
+  if($grades[$gradekey]->modulename == 'assign')
+  {
+    $grades[$gradekey]->value = $rate->assignmentrate;
+  }
+  if($grades[$gradekey]->modulename == 'quiz')
+  {
+    $grades[$gradekey]->value = $rate->quizrate;
+  }
+  $graders[$key]->totalvalue += $grades[$gradekey]->value;
 }
+$graders[$key]->gradescounts= count($grades);
+
+
+}
+
 
 $results->data = array_values($graders);
 $results->month = $month;
